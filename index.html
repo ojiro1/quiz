@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz angielski</title>
+    <link rel="stylesheet" href="styl.css">
+</head>
+<body>
+    <h1>quiz 1</h1>
+    <form id="quiz-form" class="quiz-container"></form>
+    <button id="submit-button">Zakończ quiz</button>
+    <div id="results"></div>
+
+    <script>
+        const wordsAndTranslations = [
+  { word: "canteen", translation: "stołówka" },
+  { word: "classroom", translation: "sala lekcyjna, klasa" },
+  { word: "computer room", translation: "pracownia komputerowa" },
+  { word: "corridor", translation: "korytarz" },
+  { word: "gym", translation: "sala gimnastyczna" },
+  { word: "head teacher's office", translation: "gabinet dyrektora" },
+  { word: "laboratory", translation: "pracownia naukowa, laboratorium" },
+  { word: "library", translation: "biblioteka" },
+  { word: "office", translation: "sekretariat" },
+  { word: "playground", translation: "boisko szkolne, plac zabaw" },
+  { word: "playing field", translation: "boisko" },
+  { word: "teachers' room", translation: "pokój nauczycielski" },
+  { word: "Art", translation: "plastyka" },
+  { word: "Biology", translation: "biologia" },
+  { word: "Chemistry", translation: "chemia" },
+  { word: "Civic studies / Civics / Citizenship", translation: "wiedza o społeczeństwie" },
+  { word: "English Language and Literature", translation: "język angielski" },
+  { word: "foreign languages", translation: "języki obce" },
+  { word: "Geography", translation: "geografia" },
+  { word: "History", translation: "historia" },
+  { word: "humanities", translation: "przedmioty humanistyczne" },
+  { word: "Information and Communication Technology (ICT) / Information Technology (IT)", translation: "informatyka" },
+  { word: "Mathematics/Maths", translation: "matematyka" },
+  { word: "Music", translation: "muzyka" },
+  { word: "Physical Education (PE)", translation: "wychowanie fizyczne, WF" },
+  { word: "Physics", translation: "fizyka" },
+  { word: "Polish Language and Literature", translation: "język polski" },
+  { word: "Religious Education (RE)", translation: "religia" },
+  { word: "Science", translation: "nauki przyrodnicze" },
+  { word: "science subjects", translation: "przedmioty ścisłe" },
+  { word: "attend", translation: "uczęszczać" },
+  { word: "attend a course / classes", translation: "uczęszczać na kurs/zajęcia" },
+  { word: "attend school", translation: "chodzić do szkoły" },
+  { word: "collaborate with sb", translation: "współpracować z kimś" },
+  { word: "concentrate", translation: "koncentrować się" },
+  { word: "concentration", translation: "koncentracja" },
+  { word: "cooperate with sb", translation: "współpracować z kimś" },
+  { word: "copy (answers/homework) from sb", translation: "przepisywać (odpowiedzi/pracę domową) od kogoś" },
+  { word: "discuss set books", translation: "omawiać lektury" },
+  { word: "do a project", translation: "robić projekt" },
+  { word: "do a task", translation: "wykonywać zadanie" },
+  { word: "do an activity/exercise", translation: "robić ćwiczenie" },
+  { word: "do an experiment", translation: "przeprowadzić eksperyment" },
+  { word: "do homework", translation: "odrabiać pracę domową" },
+  { word: "do well", translation: "dobrze sobie radzić" },
+  { word: "do your best", translation: "bardzo się starać" },
+  { word: "expel sb from school", translation: "wydalić kogoś ze szkoły" },
+  { word: "find it impossible to do sth", translation: "nie być w stanie czegoś zrobić" },
+  { word: "focus on sth", translation: "skupiać się na czymś" },
+  { word: "go to school", translation: "chodzić do szkoły" },
+  { word: "hand in homework", translation: "oddawać pracę domową" },
+  { word: "have a break", translation: "zrobić sobie przerwę, mieć przerwę" },
+  { word: "have a lessons", translation: "mieć lekcje" },
+  { word: "knowledge", translation: "wiedza" },
+  { word: "learn about sth", translation: "dowiadywać się o czymś" },
+  { word: "learn new skills", translation: "nabyć nowych umiejętności" },
+  { word: "learn sth", translation: "uczyć się czegoś" },
+  { word: "make a good impression", translation: "zrobić dobre wrażenie" },
+  { word: "make a presentation", translation: "zrobić prezentację" },
+  { word: "make mistakes", translation: "robić błędy" },
+  { word: "make progress", translation: "robić postępy" },
+  { word: "memorise", translation: "uczyć się na pamięć" },
+  { word: "miss lessons", translation: "opuszczać lekcje" },
+  { word: "motivate", translation: "motywować" },
+  { word: "notes", translation: "notatki" },
+  { word: "make/take", translation: "robić notatki" },
+  { word: "participate in sth", translation: "brać w czymś udział" },
+  { word: "pay attention (in class)", translation: "uważać (na lekcji)" },
+  { word: "read maps", translation: "czytać mapy" },
+  { word: "report findings", translation: "przedstawiać wnioski/wyniki" },
+  { word: "revision", translation: "powtórka, powtórzenie" },
+  { word: "skip classes", translation: "opuszczać zajęcia, chodzić na wagary" },
+  { word: "solve a problem", translation: "rozwiązywać problem/zadanie" },
+  { word: "study hard", translation: "uczyć się pilnie" },
+  { word: "take lessons", translation: "chodzić na lekcje" },
+  { word: "take part in sth", translation: "brać w czymś udział" },
+  { word: "teach (a subject)", translation: "nauczać (przedmiotu)" },
+  { word: "turn up late", translation: "spóźniać się" },
+  { word: "wipe the board", translation: "ścierać tablicę" },
+  { word: "work in groups", translation: "pracować w grupach" },
+  { word: "write an essay", translation: "pisać wypracowanie" },
+  { word: "be off school", translation: "być nieobecnym w szkole" },
+  { word: "catch up on (schoolwork)", translation: "nadrobić (materiał z zajęć)" },
+  { word: "cause disruption", translation: "zakłócać porządek" },
+  { word: "conduct an experiment", translation: "przeprowadzać eksperyment" },
+  { word: "excel at sth", translation: "celować w czymś" },
+  { word: "expulsion", translation: "wydalenie (ze szkoły)" },
+  { word: "fall behind with schoolwork", translation: "mieć zaległości w nauce" },
+  { word: "read Greek myths", translation: "czytać mity greckie" },
+  { word: "set homework", translation: "zadawać pracę domową" },
+  { word: "show up late", translation: "spóźnić się" },
+  { word: "achieve your aims/goals", translation: "osiągać swoje cele" },
+  { word: "advance", translation: "rozwijać się, robić postępy" },
+  { word: "advanced", translation: "zaawansowany" },
+  { word: "aim", translation: "cel" },
+  { word: "autonomous study", translation: "samodzielna nauka" },
+  { word: "complete a course", translation: "ukończyć kurs" },
+  { word: "develop", translation: "rozwijać" },
+  { word: "develop a new skill", translation: "rozwijać nową umiejętność" },
+  { word: "development", translation: "rozwój" },
+  { word: "do (scientific) research", translation: "przeprowadzać badania (naukowe)" },
+  { word: "do/take a course", translation: "chodzić na kurs" },
+  { word: "gain new qualifications", translation: "zdobyć nowe kwalifikacje" },
+  { word: "goal", translation: "cel" },
+  { word: "improve", translation: "poprawić" },
+  { word: "improve your study skills", translation: "poprawić umiejętności uczenia się" },
+  { word: "improvement", translation: "poprawa, polepszenie" },
+  { word: "learning objective", translation: "cel nauki" },
+  { word: "motivation", translation: "motywacja" },
+  { word: "lack in motivation", translation: "mieć zbyt mało motywacji" },
+  { word: "motivation to learn", translation: "motywacja do nauki" },
+  { word: "motivator", translation: "czynnik motywujący" },
+  { word: "act as a motivator", translation: "działać jako czynnik motywujący" },
+  { word: "online education/learning", translation: "kształcenie na odległość" },
+  { word: "personal development", translation: "rozwój osobisty" },
+  { word: "professional life", translation: "życie zawodowe" },
+  { word: "self-motivated learner", translation: "uczeń o silnej motywacji wewnętrznej" },
+  { word: "set yourself a goal", translation: "wyznaczyć sobie cel" },
+  { word: "take an active role", translation: "brać aktywny udział" },
+  { word: "think flexibly", translation: "myśleć elastycznie" },
+  { word: "training", translation: "szkolenie" },
+  { word: "set (clear) targets", translation: "wyznaczać (jasne) cele" },
+  { word: "blackboard", translation: "tablica (czarna)" },
+  { word: "board", translation: "tablica" },
+  { word: "board eraser", translation: "gąbka do tablicy" },
+  { word: "calculator", translation: "kalkulator" },
+  { word: "chalk", translation: "kreda" },
+  { word: "coloured pencil", translation: "kredka" },
+  { word: "copybook", translation: "zeszyt" },
+  { word: "correction fluid", translation: "korektor" },
+  { word: "crayons", translation: "kredki świecowe" },
+  { word: "desk", translation: "ławka" },
+  { word: "dictionary", translation: "słownik" },
+  { word: "file", translation: "teczka na dokumenty: plik" },
+  { word: "folder", translation: "teczka tekturowa" },
+  { word: "highlighter", translation: "zakreślacz" },
+  { word: "interactive whiteboard", translation: "tablica interaktywna" },
+  { word: "locker", translation: "szafka" },
+  { word: "notebook", translation: "zeszyt" },
+  { word: "PE kit", translation: "strój gimnastyczny" },
+  { word: "pen", translation: "długopis" },
+  { word: "pencil", translation: "ołówek" },
+  { word: "pencil case", translation: "piórnik" },
+  { word: "(pencil) sharpener", translation: "temperówka" },
+  { word: "(ring) binder", translation: "segregator" },
+  { word: "row of desks", translation: "rząd ławek" },
+  { word: "rubber", translation: "gumka" },
+  { word: "ruler", translation: "linijka" },
+ { word: "school bag", translation: "tornister, plecak szkolny" },
+  { word: "textbook", translation: "podręcznik" },
+  { word: "whiteboard", translation: "tablica (biała)" },
+  { word: "whiteboard marker", translation: "pisak do tablicy" },
+  { word: "workbook", translation: "zeszyt ćwiczeń" },
+  { word: "academic results", translation: "wyniki w nauce" },
+  { word: "academic standards", translation: "poziom nauczania" },
+  { word: "credit", translation: "punkty" },
+  { word: "exam paper", translation: "arkusz egzaminacyjny" },
+  { word: "exam results", translation: "wyniki egzaminu" },
+  { word: "examination/exam", translation: "egzamin" },
+  { word: "examine", translation: "przeegzaminować" },
+  { word: "grade", translation: "stopień, ocena" },
+  { word: "mark", translation: "stopień, ocena" },
+  { word: "past exam paper", translation: "arkusz egzaminacyjny z ubiegłych lat" },
+  { word: "school-leaving exam", translation: "egzamin końcowy (na zakończenie szkoły)" },
+  { word: "score", translation: "wynik" },
+  { word: "university entrance exam", translation: "egzamin wstępny na uczelnię" },
+  { word: "written exam", translation: "egzamin pisemny" },
+  { word: "above average", translation: "powyżej średniej" },
+  { word: "assess", translation: "oceniać" },
+  { word: "achievement", translation: "osiągnięcie" },
+  { word: "evaluate", translation: "oceniać" },
+  { word: "mock exam", translation: "egzamin próbny" },
+  { word: "multiple-choice test/question", translation: "test/pytanie wielokrotnego wyboru" },
+  { word: "resit", translation: "powtarzać egzamin; egzamin poprawkowy" },
+  { word: "term paper", translation: "praca semestralna" },
+  { word: "worksheet", translation: "arkusz, karta ćwiczeń" },
+  { word: "cheat in an exam", translation: "ściągać na egzaminie" },
+  { word: "do/sit/take an exam", translation: "przystępować do egzaminu" },
+  { word: "do badly in an exam", translation: "poradzić na egzaminie źle sobie" },
+  { word: "fail an exam", translation: "oblać egzamin" },
+  { word: "get/score (56) marks/points in a test", translation: "dostać (56) punktów z testu" },
+  { word: "get good marks", translation: "dostawać dobre oceny" },
+  { word: "grade/mark an exam paper/a test/homework", translation: "sprawdzać arkusz egzaminacyjny/test/pracę domową" },
+  { word: "pass an exam", translation: "zdać egzamin" },
+  { word: "prepare for an exam", translation: "przygotowywać się do egzaminu" },
+  { word: "retake an exam", translation: "ponownie przystępować do egzaminu" },
+  { word: "revise for an exam", translation: "powtarzać do egzaminu" },
+  { word: "study for an exam", translation: "uczyć się do egzaminu" },
+  { word: "abilities", translation: "zdolności" },
+  { word: "announce sth in assembly", translation: "ogłosić coś na apelu" },
+  { word: "assignment", translation: "zadanie, praca domowa" },
+  { word: "submit an assignment", translation: "oddać pracę domową" },
+  { word: "dread sth", translation: "obawiać się czegoś" },
+  { word: "drop out of (school/college)", translation: "rzucić (szkołę/studia)" },
+  { word: "end up doing sth", translation: "tu: ostatecznie coś zrobić (wbrew wcześniejszym uczuciom/planom)" },
+  { word: "hang around", translation: "kręcić się" },
+  { word: "homeschooling", translation: "nauczanie domowe" },
+  { word: "look back on sth", translation: "wspominać coś" },
+  { word: "project work", translation: "praca projektowa" },
+  { word: "prom (AmE)", translation: "bal na zakończenie roku szkolnego w szkole średniej" },
+  { word: "restrict access to (a room)", translation: "ograniczyć dostęp do (pokoju)" },
+  { word: "school report", translation: "sprawozdanie, świadectwo szkolne" },
+  { word: "Source texts", translation: "teksty źródłowe" },
+  { word: "set books", translation: "lektury szkolne" },
+  { word: "strict rules", translation: "surowe zasady" },
+  { word: "student exchange programme", translation: "wymiana uczniowska, wymiana studencka" },
+  { word: "term", translation: "semestr" },
+  { word: "timetable", translation: "plan lekcji" },
+  { word: "troublemaker", translation: "osoba sprawiająca kłopoty" },
+  { word: "workshop", translation: "warsztaty, zajęcia praktyczne" },
+  { word: "written work", translation: "praca pisemna" },
+  { word: "absence", translation: "nieobecność" },
+  { word: "attendance", translation: "obecność" },
+  { word: "blended learning", translation: "nauczanie hybrydowe" },
+  { word: "break", translation: "przerwa" },
+  { word: "lunch", translation: "przerwa na lunch" },
+  { word: "bullying", translation: "prześladowanie" },
+  { word: "class", translation: "lekcja, zajęcia" },
+  { word: "(class) register", translation: "dziennik lekcyjny" },
+  { word: "electronic register", translation: "dziennik elektroniczny" },
+  { word: "take the register", translation: "sprawdzać listę obecności w dzienniku" },
+  { word: "compulsory", translation: "obowiązkowy" },
+  { word: "deadline", translation: "termin wykonania pracy" },
+  { word: "dyslexia", translation: "dysleksja" },
+  { word: "dyslexic", translation: "dyslektyczny" },
+  { word: "exchange student", translation: "uczeń uczestniczący, uczennica uczestnicząca w wymianie" },
+  { word: "group work", translation: "praca w grupie" },
+  { word: "holiday", translation: "wakacje" },
+  { word: "learning difficulties", translation: "trudności w nauce" },
+  { word: "lesson", translation: "lekcja" },
+  { word: "newcomer", translation: "nowy uczeń, nowa uczennica" },
+  { word: "open day", translation: "dzień otwarty" },
+  { word: "optional", translation: "nieobowiązkowy" },
+  { word: "parent-teacher conference", translation: "wywiadówka, zebranie rodziców" },
+  { word: "personalised education", translation: "nauczanie indywidualne" },
+  { word: "school trip", translation: "wycieczka szkolna" },
+  { word: "school uniform", translation: "mundurek szkolny" },
+  { word: "school year", translation: "rok szkolny" },
+  { word: "classmate", translation: "kolega, koleżanka z klasy" },
+  { word: "deputy head", translation: "wicedyrektor, wicedyrektorka" },
+  { word: "examiner", translation: "egzaminator, egzaminatorka" },
+  { word: "form teacher", translation: "wychowawca, wychowawczyni" },
+  { word: "head teacher", translation: "dyrektor, dyrektorka szkoły" },
+  { word: "instructor", translation: "instruktor, instruktorka" },
+  { word: "lecturer", translation: "wykładowca, wykładowczyni" },
+  { word: "professor", translation: "profesor, profesorka" },
+  { word: "pupil", translation: "uczeń, uczennica" },
+  { word: "schoolboy", translation: "uczeń" },
+  { word: "schoolgirl", translation: "uczennica" },
+  { word: "schoolmate", translation: "kolega, koleżanka ze szkoły" },
+  { word: "secretary", translation: "sekretarz, sekretarka" },
+  { word: "student", translation: "uczeń, uczennica, student, studentka" },
+  { word: "teacher", translation: "nauczyciel, nauczycielka" },
+  { word: "teaching staff", translation: "grono pedagogiczne" },
+  { word: "tutor", translation: "korepetytor, korepetytorka, prywatny nauczyciel, prywatna nauczycielka" },
+  { word: "university student", translation: "student, studentka uniwersytetu" },
+  { word: "absent (from school)", translation: "nieobecny (w szkole)" },
+  { word: "active", translation: "aktywny" },
+  { word: "cooperative/uncooperative", translation: "chętny/niechętny do współpracy" },
+  { word: "demanding", translation: "wymagający" },
+  { word: "fair/unfair", translation: "sprawiedliwy/niesprawiedliwy" },
+  { word: "gifted", translation: "utalentowany" },
+  { word: "hard-working", translation: "pracowity" },
+  { word: "imaginative", translation: "obdarzony wyobraźnią" },
+  { word: "motivated", translation: "zmotywowany" },
+  { word: "motivating", translation: "motywujący" },
+  { word: "passive", translation: "bierny" },
+  { word: "present (at school)", translation: "obecny (w szkole)" },
+  { word: "professional", translation: "profesjonalny" },
+  { word: "punctual", translation: "punktualny" },
+  { word: "strict", translation: "surowy" },
+  { word: "talented", translation: "utalentowany" },
+  { word: "club", translation: "kółko zainteresowań" },
+  { word: "book club", translation: "klub książki" },
+  { word: "chess club", translation: "kółko szachowe" },
+  { word: "drama club", translation: "kółko teatralne" },
+  { word: "sports club", translation: "SKS (Szkolny Klub Sportowy)" },
+  { word: "competition", translation: "olimpiada przedmiotowa" },
+  { word: "sports day", translation: "dzień sportu" },
+  { word: "school choir", translation: "chór szkolny" },
+  { word: "academy", translation: "akademia" },
+  { word: "college", translation: "szkoła wyższa, kolegium" },
+  { word: "co-educational school", translation: "szkoła koedukacyjna" },
+  { word: "comprehensive school", translation: "szkoła państwowa dla uczniów powyżej 11. roku życia" },
+  { word: "elementary school (AmE)", translation: "szkoła podstawowa" },
+  { word: "fee-paying school", translation: "płatna szkoła" },
+  { word: "grade (six) (AmE)", translation: "(szósta) klasa" },
+  { word: "high school (AmE)", translation: "szkoła średnia" },
+  { word: "independent school", translation: "szkoła niepubliczna, społeczna" },
+  { word: "junior high school (AmE)", translation: "gimnazjum" },
+  { word: "kindergarten", translation: "przedszkole" },
+  { word: "middle school (AmE)", translation: "gimnazjum" },
+  { word: "mixed school", translation: "szkoła koedukacyjna" },
+  { word: "nursery school", translation: "przedszkole" },
+  { word: "primary school (BrE)", translation: "szkoła podstawowa" },
+  { word: "private school", translation: "szkoła prywatna" },
+  { word: "public school", translation: "w Wielkiej Brytanii: szkoła prywatna; w USA: szkoła publiczna, szkoła państwowa" },
+  { word: "secondary school (BrE)", translation: "szkoła średnia" },
+  { word: "single-sex school", translation: "szkoła tylko dla chłopców lub dziewcząt" },
+  { word: "state school (BrE)", translation: "szkoła publiczna, szkoła państwowa" },
+  { word: "university/uni", translation: "uniwersytet" },
+  { word: "year (six) (BrE)", translation: "(szósta) klasa" },
+  { word: "admission requirements", translation: "warunki przyjęcia" },
+  { word: "boarding school", translation: "szkoła z internatem" },
+  { word: "campus", translation: "kampus uniwersytecki" },
+  { word: "certificate (of completion)", translation: "certyfikat, świadectwo (ukończenia)" },
+  { word: "cram", translation: "wkuwać" },
+  { word: "curriculum", translation: "program nauczania" },
+  { word: "dormitory", translation: "akademik, internat, bursa" },
+  { word: "enrol on a course", translation: "zapisać się na kurs" },
+  { word: "faculty", translation: "wydział (uczelni)" },
+  { word: "follow the curriculum", translation: "realizować program nauczania" },
+  { word: "hall of residence", translation: "akademik, internat, bursa" },
+  { word: "obligatory", translation: "obowiązkowy" },
+  { word: "seminar", translation: "seminarium" },
+  { word: "tuition/school/college/university fees", translation: "czesne" },
+  { word: "tuition", translation: "korepetycje" },
+  { word: "tutorial", translation: "konsultacje, seminarium" },
+  { word: "vocational school", translation: "szkoła zawodowa" },
+  { word: "A levels", translation: "egzamin po szkole średniej (odpowiednik matury)" },
+  { word: "BA (Bachelor of Arts)", translation: "licencjat (nauki humanistyczne)" },
+  { word: "BSC (Bachelor of Science)", translation: "licencjat (nauki ścisłe)" },
+  { word: "graduate", translation: "absolwent, absolwentka" },
+  { word: "MA (Master of Arts)", translation: "magister (nauki humanistyczne)" },
+  { word: "MSc (Master of Science)", translation: "magister (nauki ścisłe)" },
+  { word: "PhD (Doctor of Philosophy)", translation: "doktor (nauki humanistyczne i ścisłe)" },
+  { word: "thesis", translation: "praca dyplomowa" },
+  { word: "undergraduate student", translation: "studentka pierwszych trzech lat (przed uzyskaniem licencjatu)" },
+  { word: "fresh out of uni", translation: "świeżo po studiach" },
+  { word: "get/receive/obtain a diploma/degree", translation: "otrzymać dyplom/stopień naukowy" },
+  { word: "graduate (from university)", translation: "ukończyć (studia uniwersyteckie)" },
+  { word: "have/hold a diploma/degree in", translation: "mieć dyplom/stopień naukowy z" },
+  { word: "apply to university", translation: "ubiegać się o przyjęcie na uniwersytet" },
+  { word: "change a degree course", translation: "zmienić kierunek studiów" },
+  { word: "get a scholarship/grant", translation: "dostać stypendium" },
+  { word: "get into university", translation: "dostać się na uniwersytet" },
+  { word: "take a gap year", translation: "zrobić rok przerwy między szkołą a studiami" }
+    ];
+  
+    function generateQuiz(wordsAndTranslations, numberOfQuestions) {
+            const quiz = [];
+            for (let i = 0; i < numberOfQuestions; i++) {
+                const randomIndex = Math.floor(Math.random() * wordsAndTranslations.length);
+                const correctAnswer = wordsAndTranslations[randomIndex];
+                const incorrectAnswers = wordsAndTranslations.filter((_, index) => index !== randomIndex).sort(() => 0.5 - Math.random()).slice(0, 2);
+                const allAnswers = [correctAnswer, ...incorrectAnswers].sort(() => 0.5 - Math.random());
+                const correctAnswerIndex = allAnswers.indexOf(correctAnswer);
+                quiz.push({
+                    question: `${i + 1}. Jak po angielsku powiemy '${correctAnswer.translation}'?`,
+                    answers: allAnswers.map(a => a.word),
+                    correctAnswer: correctAnswerIndex
+                });
+            }
+            return quiz;
+        }
+
+        const quiz = generateQuiz(wordsAndTranslations, 30);
+
+        const quizForm = document.getElementById('quiz-form');
+        quiz.forEach((q, i) => {
+            const questionElement = document.createElement('p');
+            questionElement.textContent = q.question;
+            questionElement.className = 'question';
+            quizForm.appendChild(questionElement);
+            const answerContainer = document.createElement('div');
+            answerContainer.className = 'answers';
+            q.answers.forEach((a, j) => {
+                const answerElement = document.createElement('input');
+                answerElement.type = 'radio';
+                answerElement.name = `question${i}`;
+                answerElement.id = `question${i}answer${j}`;
+                answerElement.value = j;
+                const labelElement = document.createElement('label');
+                labelElement.htmlFor = `question${i}answer${j}`;
+                labelElement.textContent = a;
+                answerContainer.appendChild(answerElement);
+                answerContainer.appendChild(labelElement);
+                answerContainer.appendChild(document.createElement('br'));
+            });
+            quizForm.appendChild(answerContainer);
+        });
+
+        document.getElementById('submit-button').addEventListener('click', function() {
+            let correctAnswers = 0;
+            let incorrectAnswers = 0;
+            quiz.forEach((q, i) => {
+                const userAnswer = document.querySelector(`input[name="question${i}"]:checked`);
+                const labels = document.querySelectorAll(`label[for^="question${i}answer"]`);
+                if (userAnswer) {
+                    if (Number(userAnswer.value) === q.correctAnswer) {
+                        correctAnswers++;
+                        labels[Number(userAnswer.value)].className = 'correct-answer';
+                    } else {
+                        incorrectAnswers++;
+                        labels[Number(userAnswer.value)].className = 'incorrect-answer';
+                        labels[q.correctAnswer].className = 'correct-answer';
+                    }
+                } else {
+                    incorrectAnswers++;
+                    labels[q.correctAnswer].className = 'correct-answer';
+                }
+            });
+            document.getElementById('results').textContent = `Poprawne odpowiedzi: ${correctAnswers}, Błędne odpowiedzi: ${incorrectAnswers}`;
+        });
+    </script>
+</body>
+</html>
